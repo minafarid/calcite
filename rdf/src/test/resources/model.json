@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "defaultSchema": "jena",
+  "schemas": [
+    {
+      "name": "jena",
+      "type": "custom",
+      "factory": "org.apache.calcite.adapter.rdf.RdfSchemaFactory",
+      "operand": {
+        "triples_file": "cordis_small.nt"
+      }
+    }
+  ]
+}
