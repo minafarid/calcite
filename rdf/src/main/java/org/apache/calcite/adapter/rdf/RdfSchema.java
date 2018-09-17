@@ -2,6 +2,7 @@ package org.apache.calcite.adapter.rdf;
 
 import com.google.common.collect.ImmutableMap;
 import java.io.File;
+import java.util.Locale;
 import java.util.Map;
 import org.apache.calcite.schema.Table;
 import org.apache.calcite.schema.impl.AbstractSchema;
@@ -50,15 +51,14 @@ public class RdfSchema extends AbstractSchema {
     // Create jena model.
     Model model = RDFDataMgr.loadModel(triplesFile.getAbsolutePath());
     String typesQueryString = "SELECT DISTINCT ?type WHERE { ?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?type }";
-    Query query = QueryFactory.create(typesQueryString) ;
+    Query query = QueryFactory.create(typesQueryString);
     try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
-      ResultSet results = qexec.execSelect() ;
-      while (results.hasNext())
-      {
-        QuerySolution soln = results.nextSolution() ;
-        Resource type = soln.getResource("type") ;
-        RdfTable typeTable = new RdfTable(source, null);
-        builder.put(type.getLocalName(), typeTable);
+      ResultSet results = qexec.execSelect();
+      while (results.hasNext()) {
+        QuerySolution soln = results.nextSolution();
+        Resource type = soln.getResource("type");
+        RdfTable typeTable = new RdfTable(null, source, model, type.getURI(), null);
+        builder.put(type.getLocalName().toUpperCase(Locale.ENGLISH), typeTable);
       }
     }
 
